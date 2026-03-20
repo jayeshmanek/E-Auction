@@ -1,11 +1,11 @@
 /* NAVBAR */
 .navbar {
-  background-color: #0f6d82;
+  background: linear-gradient(90deg, #1e3a8a, #6b21a8);
   color: white;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .navbar-container {
@@ -22,10 +22,12 @@
 .logo {
   font-size: 24px;
   font-weight: bold;
+  color: white;
 }
 
 .logo-highlight {
-  color: #f5a623;
+  color: #ffcc00;   /* e letter color */
+  font-weight: 800;
 }
 
 /* DESKTOP LINKS */
@@ -44,12 +46,12 @@
 }
 
 .nav-links a:hover {
-  color: #f5a623;
+  color: #ffcc00;
 }
 
 /* LOGOUT BUTTON */
 .logout-btn {
-  background-color: #f5a623;
+  background-color: #ffcc00;
   border: none;
   padding: 6px 14px;
   border-radius: 5px;
@@ -58,7 +60,7 @@
 }
 
 .logout-btn:hover {
-  background-color: #ffb84d;
+  background-color: #ffd633;
 }
 
 /* HAMBURGER */
@@ -100,7 +102,7 @@
     flex-direction: column;
     gap: 15px;
     padding: 20px;
-    background-color: #0f6d82;
+    background: linear-gradient(90deg, #1e3a8a, #6b21a8);
   }
 
   .mobile-menu a {

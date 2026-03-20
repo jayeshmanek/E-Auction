@@ -1,43 +1,52 @@
-
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 export const GetApiDemo = () => {
-    const [users, setusers] = useState([])
 
-    const getUsers = async()=>{
+    const [users, setUsers] = useState([])
 
-        const res = await axios.get("https://node5.onrender.com/user/user/")
-        console.log("response...",res);
-        setusers(res.data.data)
+    const getUsers = async () => {
+        try {
+            const res = await axios.get("https://node5.onrender.com/user/user/")
+            setUsers(res.data.data)
+        } catch (error) {
+            console.log("Error:", error)
+        }
     }
-    //component --> load --> useEffec call --> function call..
-    useEffect(()=>{
-        //api logic..
+
+    useEffect(() => {
         getUsers()
-    },[])
-  return (
-    <div style={{textAlign:"center"}}>
-        <h1>GET API DEMO</h1>
-        {/* <button onClick={getUsers}>Get Users</button> */}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users.map((user)=>(
-                    <tr key={user._id}>
-                        <td>{user._id}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
+    }, [])
+
+    return (
+        <div style={{ textAlign: "center" }}>
+            <h2>User List</h2>
+
+            <table style={{
+                width: "80%",
+                margin: "20px auto",
+                borderCollapse: "collapse"
+            }} border="1">
+
+                <thead style={{ backgroundColor: "#007bff", color: "white" }}>
+                    <tr>
+                        <th style={{ padding: "10px" }}>ID</th>
+                        <th style={{ padding: "10px" }}>Name</th>
+                        <th style={{ padding: "10px" }}>Email</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
-  )
+                </thead>
+
+                <tbody>
+                    {users.map((user) => (
+                        <tr key={user._id}>
+                            <td style={{ padding: "8px" }}>{user._id}</td>
+                            <td style={{ padding: "8px" }}>{user.name}</td>
+                            <td style={{ padding: "8px" }}>{user.email}</td>
+                        </tr>
+                    ))}
+                </tbody>
+
+            </table>
+        </div>
+    )
 }

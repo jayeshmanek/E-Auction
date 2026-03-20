@@ -6,6 +6,17 @@ import { CarList } from "../user/CarList";
 import { CarDetail } from "../user/CarDetail";
 import { GetApiDemo } from "../user/GetApiDemo";
 import { UseEffectDemo } from "../user/UseEffectDemo";
+import { MyDashboard } from "../user/Dashboard/MyDashboard";
+import { EditProfile } from "../user/Dashboard/EditProfile";
+import { ChangePassword } from "../user/Dashboard/ChangePassword";
+import Home from "../user/Dashboard/Home";
+import AboutUs from "../user/AboutUs";
+
+
+
+
+
+
 
 // ================= ADMIN COMPONENTS =================
 import { AdminSidebar } from "../Admin/AdminSidebar";
@@ -33,6 +44,13 @@ const router = createBrowserRouter([
       { path: "cardetail", element: <CarDetail /> },
       { path: "getapidemo1", element: <GetApiDemo /> },
       { path: "useeffectdemo", element: <UseEffectDemo /> },
+      { path: "MyDashboard", element: <MyDashboard /> },
+      { path: "editprofile", element: <EditProfile /> },
+      { path: "changepassword", element: <ChangePassword /> },
+      { path: "Home", element: <Home /> },
+            { path: "AboutUs", element: <AboutUs /> },
+
+
     ],
   },
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../Css/Signup.css";
 
 const Signup = () => {
@@ -13,6 +14,7 @@ const Signup = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,23 +23,27 @@ const Signup = () => {
     });
   };
 
-  // 🔥 Signup Success Redirect Logic
-  const handleSignup = () => {
-    localStorage.setItem("token", "12345");
-    navigate("/user", { replace: true });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!acceptTerms) {
+      toast.error("Please accept Terms & Conditions ❌");
+      return;
+    }
+
     setIsLoading(true);
 
-    // Simulate API call
+    // Simulated API call
     setTimeout(() => {
       console.log("Signup data:", formData);
-      setIsLoading(false);
 
-      // After successful signup
-      handleSignup();
+      localStorage.setItem("token", "12345");
+
+      toast.success("Account Created Successfully ✅", {
+        onClose: () => navigate("/user", { replace: true })
+      });
+
+      setIsLoading(false);
 
     }, 1500);
   };
@@ -45,48 +51,87 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <div className="signup-card">
-        <h1>E-Auction</h1>
-        <h2>Create Account</h2>
+
+        <div className="signup-header">
+          <h1>E-Auction</h1>
+          <h2>Create Account</h2>
+          <p>Sign up to get started</p>
+        </div>
 
         <form onSubmit={handleSubmit} className="signup-form">
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Creating Account..." : "Sign Up"}
+          <div className="form-options">
+            <label className="terms-checkbox">
+              <input
+                type="checkbox"
+                checked={acceptTerms}
+                onChange={() => setAcceptTerms(!acceptTerms)}
+              />
+              I agree to the{" "}
+              <a href="#" className="terms-link">
+                Terms & Conditions
+              </a>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="signup-button"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              "Sign Up"
+            )}
           </button>
 
         </form>
 
-        <p>
-          Already have an account?{" "}
-          <Link to="/login">Login</Link>
-        </p>
+        <div className="signup-footer">
+          <p>
+            Already have an account?{" "}
+            <Link to="/login" className="login-link">
+              Login
+            </Link>
+          </p>
+        </div>
 
       </div>
     </div>

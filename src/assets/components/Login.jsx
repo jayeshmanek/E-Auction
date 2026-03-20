@@ -1,56 +1,28 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import '../Css/Login.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../Css/Login.css";
 
-export const Login = () => {
+const Login = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: ""
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
-    }
-  };
-
   const validateForm = () => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    if (!formData.email || !formData.password) {
+      toast.error("All fields are required ❌");
+      return false;
     }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
+  // ✅ UPDATED HANDLE SUBMIT (CONNECTED TO BACKEND)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,36 +31,35 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      // 🔥 POST API CALL
       const response = await axios.post(
-        "https://jsonplaceholder.typicode.com/posts",
+        "http://localhost:5001/api/users/login", // ✅ backend API
         formData
       );
 
       console.log("API Response:", response.data);
 
-      // Store token (example)
-      localStorage.setItem("token", "12345");
+      // ✅ Save token from backend
+      localStorage.setItem("token", response.data.token);
 
-      toast.success("Login Successful ✅");
-
-      navigate("/user", { replace: true });
+      toast.success(response.data.message || "Login Successful ✅", {
+        onClose: () => navigate("/user", { replace: true })
+      });
 
     } catch (error) {
-      console.error(error);
-      toast.error("Login Failed ❌");
+      console.log(error);
+
+      toast.error(
+        error.response?.data?.message || "Login Failed ❌"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
     <div className="login-container">
       <div className="login-card">
+
         <div className="login-header">
           <h1>E-Auction</h1>
           <h2>Welcome Back</h2>
@@ -96,51 +67,54 @@ export const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+
           <div className="form-group">
             <label>Email Address</label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
               placeholder="Enter your email"
-              className={errors.email ? 'error' : ''}
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
           <div className="form-group">
             <label>Password</label>
-            <div className="password-input-wrapper">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className={errors.password ? 'error' : ''}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? '🙈' : '👁'}
-              </button>
-            </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+            />
           </div>
 
-          <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Sign In'}
+          <button
+            type="submit"
+            className="login-button"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              "Sign In"
+            )}
           </button>
+
         </form>
 
         <div className="login-footer">
           <p>
-            Don't have an account? <Link to="/signup">Sign up</Link>
+            Don't have an account?{" "}
+            <Link to="/signup" className="signup-link">
+              Sign up
+            </Link>
           </p>
         </div>
+
       </div>
     </div>
   );
