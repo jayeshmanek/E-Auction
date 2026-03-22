@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";  // ✅ useEffect added
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,6 +14,14 @@ const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // ✅ AUTO LOGIN (NEW ADD)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/user");
+    }
+  }, []);
+
   const validateForm = () => {
     if (!formData.email || !formData.password) {
       toast.error("All fields are required ❌");
@@ -22,7 +30,7 @@ const Login = () => {
     return true;
   };
 
-  // ✅ UPDATED HANDLE SUBMIT (CONNECTED TO BACKEND)
+  // ✅ HANDLE SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,18 +40,20 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/login", // ✅ backend API
+        "http://localhost:5001/api/users/login",
         formData
       );
 
       console.log("API Response:", response.data);
 
-      // ✅ Save token from backend
+      // ✅ Save token
       localStorage.setItem("token", response.data.token);
 
-      toast.success(response.data.message || "Login Successful ✅", {
-        onClose: () => navigate("/user", { replace: true })
-      });
+      // ✅ Show success
+      toast.success(response.data.message || "Login Successful ✅");
+
+      // ✅ INSTANT REDIRECT (NEW ADD)
+      navigate("/user", { replace: true });
 
     } catch (error) {
       console.log(error);
